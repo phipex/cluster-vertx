@@ -35,4 +35,15 @@ services:
       - "traefik.http.routers.webservice.rule=Host(`webservice.docker.localhost`) || (Path(`/webservice`))"
       - "traefik.http.routers.webservice.service=webservice@docker"
       - "traefik.http.services.webservice.loadbalancer.server.port=8081"
-  
+#      - "traefik.http.services.webservice.loadbalancer.server.port=8888"
+
+      - "traefik.http.routers.webservice2.rule=Host(`webservice2.docker.localhost`) || (Path(`/webservice2`))"
+      - "traefik.http.routers.webservice2.service=webservice2@docker"
+      - "traefik.http.services.webservice2.loadbalancer.server.port=8888"
+
+  vertx:
+    image: phipex/vertx-only:1.0-SNAPSHOT
+    labels:
+      - "traefik.http.routers.vertx.rule=Host(`vertx.docker.localhost`) || (Path(`/vertx`))"
+      - "traefik.http.routers.vertx.service=vertx@docker"
+      - "traefik.http.services.vertx.loadbalancer.server.port=8888"

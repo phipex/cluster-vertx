@@ -8,12 +8,11 @@ Configuracion basica de un proxy a un servicio que se espera replicar, para el e
 
 - Contiene dashboard en modo inseguro
 - Nivel de log en debug
-
 ## Comandos basicos
 Se compila la imagen del servicio con el siguiente comando
 
 ````
-./gradlew build jibDockerBuild  
+./webservice/gradlew build jibDockerBuild  
 ````
  Se corre el docker compose con el siguiente comando:
  ````

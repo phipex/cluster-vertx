@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/proxy-traefik.iml" filepath="$PROJECT_DIR$/.idea/proxy-traefik.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/webservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/webservice.main.iml" />
     </modules>
   </component>
 </project>

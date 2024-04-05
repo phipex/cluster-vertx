@@ -26,6 +26,8 @@ dependencies {
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'io.vertx:vertx-web:4.2.7'
+	implementation 'io.vertx:vertx-hazelcast:4.2.7'
 }
 
 test {
