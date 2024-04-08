@@ -1,9 +1,13 @@
 package co.com.ies.pruebas.webservice;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -24,6 +28,8 @@ public class MainVerticle extends AbstractVerticle {
     private final AtomicLong counter = new AtomicLong ();
     private static final String template = "Hello Docker, %s!";
 
+
+
     @Override
     public void start () throws Exception {
         log.info ("MainVerticle.start");
@@ -37,12 +43,14 @@ public class MainVerticle extends AbstractVerticle {
                     .onComplete (result -> {
                         System.out.println ("MainVerticle.start.onComplete");
                         if (result.succeeded ()) {
-                            System.out.println ("Received reply: " + result.result ().body ());
+
+                            String body = result.result ()
+                                    .body ();
+                            System.out.println ("Received reply: " + body);
                             request.response ()
-                                    .putHeader ("content-type", "text/plain")
+                                    .putHeader ("content-type", "text/json")
                                     .setStatusCode (200)
-                                    .end (result.result ()
-                                            .body ());
+                                    .end (body);
                         } else {
                             request.response ()
                                     .setStatusCode (500)
@@ -63,5 +71,6 @@ public class MainVerticle extends AbstractVerticle {
         });
 
     }
+
 
 }
