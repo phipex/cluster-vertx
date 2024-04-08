@@ -1,29 +1,19 @@
 package co.com.ies.pruebas.webservice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Promise;
 import io.vertx.core.http.HttpServer;
-import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.handler.BodyHandler;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
 
 @Component
 public class MainVerticle extends AbstractVerticle {
     public static final int PORT = 8888;
     public static final String GET_ALL_ARTICLES = "request";
-    private static Logger log =
-            Logger.getLogger (MainVerticle.class.getPackageName ());
+    private final Logger log = LoggerFactory.getLogger(MainVerticle.class);
 
     private final AtomicLong counter = new AtomicLong ();
     private static final String template = "Hello Docker, %s!";
@@ -36,22 +26,24 @@ public class MainVerticle extends AbstractVerticle {
         HttpServer server = vertx.createHttpServer ();
 
         server.requestHandler (request -> {
-            log.info ("MainVerticle.start server.requestHandler");
+            log.debug ("MainVerticle.start server.requestHandler");
 
             vertx.eventBus ()
                     .<String>request (GET_ALL_ARTICLES, "")
+                    .onFailure (exception -> log.error ("MainVerticle.start.onFailure", exception))
                     .onComplete (result -> {
-                        System.out.println ("MainVerticle.start.onComplete");
+                        log.debug ("MainVerticle.start.onComplete");
                         if (result.succeeded ()) {
 
                             String body = result.result ()
                                     .body ();
-                            System.out.println ("Received reply: " + body);
+                            log.debug ("Received reply: " + body);
                             request.response ()
                                     .putHeader ("content-type", "text/json")
                                     .setStatusCode (200)
                                     .end (body);
                         } else {
+                            log.error ("result no success",result.cause ());
                             request.response ()
                                     .setStatusCode (500)
                                     .end ();
@@ -59,6 +51,8 @@ public class MainVerticle extends AbstractVerticle {
                     });
 
         });
+
+        server.exceptionHandler (exception -> log.error ("MainVerticle.start.exceptionHandler", exception));
 
         server.listen (PORT, http -> {
             if (http.succeeded ()) {

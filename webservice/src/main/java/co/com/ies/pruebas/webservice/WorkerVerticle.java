@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.MessageConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
@@ -13,6 +15,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class WorkerVerticle extends AbstractVerticle {
+
+    private final Logger log = LoggerFactory.getLogger(WorkerVerticle.class);
 
     private static final String template = "Hello Docker, %s!";
     private final AtomicLong counter = new AtomicLong();
@@ -39,7 +43,7 @@ public class WorkerVerticle extends AbstractVerticle {
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
-            System.out.println("I have received a message: " + message.body());
+            log.debug ("I have received a message: " + message.body());
             message.reply(encode(new Greeting(counter.incrementAndGet(),
                     format, ip)));
         });
