@@ -39,8 +39,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'io.vertx:vertx-web:4.5.4'
 	implementation 'io.vertx:vertx-core:4.5.4'
-	implementation 'io.vertx:vertx-auth-jwt:4.5.4'
-	//implementation 'io.vertx:vertx-hazelcast:4.2.7'
+	implementation 'io.vertx:vertx-hazelcast:4.5.4'
 }
 
 test {
@@ -49,7 +48,7 @@ test {
 
 jib {
     from {
-        image = "adoptopenjdk:openj9"
+        image = "eclipse-temurin:17.0.10_7-jdk-alpine"
     }
     to {
         image = "phipex/${name}:${version}"

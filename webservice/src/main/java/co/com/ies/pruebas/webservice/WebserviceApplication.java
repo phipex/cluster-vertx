@@ -1,10 +1,13 @@
 package co.com.ies.pruebas.webservice;
 
-import com.sun.tools.javac.Main;
+
+import io.vertx.core.DeploymentOptions;
+import io.vertx.core.ThreadingModel;
 import io.vertx.core.Vertx;
+import io.vertx.core.spi.cluster.ClusterManager;
+import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import jakarta.annotation.PostConstruct;
 
@@ -12,13 +15,11 @@ import jakarta.annotation.PostConstruct;
 public class WebserviceApplication {
 
 	private final MainVerticle mainVerticle;
-	private final MainVerticle2 mainVerticle2;
-	private final AppServer appServerVerticle;
+	private final WorkerVerticle workerVerticle;
 
-    public WebserviceApplication (MainVerticle mainVerticle, MainVerticle2 mainVerticle2, AppServer appServerVerticle) {
+    public WebserviceApplication (MainVerticle mainVerticle, WorkerVerticle workerVerticle) {
         this.mainVerticle = mainVerticle;
-        this.mainVerticle2 = mainVerticle2;
-        this.appServerVerticle = appServerVerticle;
+        this.workerVerticle = workerVerticle;
     }
 
     public static void main(String[] args) {
@@ -31,10 +32,26 @@ public class WebserviceApplication {
 	}
 
 	private void startVertx() {
-		Vertx vertx = Vertx.vertx();
 
-		vertx.deployVerticle(appServerVerticle);
-		vertx.deployVerticle(mainVerticle);
-		vertx.deployVerticle(mainVerticle2);
+		ClusterManager mgr = new HazelcastClusterManager ();
+
+		Vertx
+				.builder()
+				.withClusterManager(mgr)
+				.buildClustered()
+				.onComplete(res -> {
+					Vertx vertx = null;
+					if (res.succeeded()) {
+						vertx = res.result();
+					} else {
+						// failed!
+						vertx = Vertx.vertx();
+					}
+					vertx.deployVerticle(mainVerticle);
+					DeploymentOptions options = new DeploymentOptions().setThreadingModel(ThreadingModel.WORKER);
+					vertx.deployVerticle (workerVerticle,options);
+				});
+
+
 	}
 }
