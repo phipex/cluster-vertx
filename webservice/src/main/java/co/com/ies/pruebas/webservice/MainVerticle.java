@@ -33,16 +33,16 @@ public class MainVerticle extends AbstractVerticle {
             log.info("MainVerticle.start server.requestHandler");
             // This handler gets called for each request that arrives on the server
             HttpServerResponse response = request.response();
-            response.putHeader("content-type", "text/plain");
+            //response.putHeader("content-type", "text/plain");
 
             // Write to the response and end it
             response.end("Hello World!");
         });
 
-        server.listen(8080, http -> {
+        server.listen(PORT, http -> {
             if (http.succeeded()) {
 
-                log.info("HTTP server started on port "+8080);
+                log.info("HTTP server started on port "+PORT);
             } else {
                 log.info("MainVerticle.start failed " + http.cause());
 

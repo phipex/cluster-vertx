@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/proxy-traefik.iml" filepath="$PROJECT_DIR$/.idea/proxy-traefik.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/webservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/webservice.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/cluster-vertx.iml" filepath="$PROJECT_DIR$/.idea/cluster-vertx.iml" />
     </modules>
   </component>
 </project>

@@ -6,15 +6,19 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 @SpringBootApplication
 public class WebserviceApplication {
 
 	private final MainVerticle mainVerticle;
+	private final MainVerticle2 mainVerticle2;
+	private final AppServer appServerVerticle;
 
-    public WebserviceApplication (MainVerticle mainVerticle) {
+    public WebserviceApplication (MainVerticle mainVerticle, MainVerticle2 mainVerticle2, AppServer appServerVerticle) {
         this.mainVerticle = mainVerticle;
+        this.mainVerticle2 = mainVerticle2;
+        this.appServerVerticle = appServerVerticle;
     }
 
     public static void main(String[] args) {
@@ -23,8 +27,14 @@ public class WebserviceApplication {
 
 	@PostConstruct
 	public void init(){
-		Vertx vertx = Vertx.vertx ();
-		vertx.deployVerticle (mainVerticle);
-		vertx.deployVerticle (new MainVerticle2 ());
+		startVertx();
+	}
+
+	private void startVertx() {
+		Vertx vertx = Vertx.vertx();
+
+		vertx.deployVerticle(appServerVerticle);
+		vertx.deployVerticle(mainVerticle);
+		vertx.deployVerticle(mainVerticle2);
 	}
 }
